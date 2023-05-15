@@ -1,0 +1,49 @@
+{
+  "name": "img-down",
+  "version": "0.0.1-alpha",
+  "description": "Yet another library / CLI tool to batch compress / downscale images.",
+  "main": "dist/index.js",
+  "bin": "dist/cli/index.js",
+  "types": "src/global.d.ts",
+  "scripts": {
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "build": "npm run lint && tsc",
+    "clean": "rm -rf dist/",
+    "prepublishOnly": "npm run test && npm run build",
+    "test": "jest src/tests"
+  },
+  "keywords": [
+    "image",
+    "image compression",
+    "CLI",
+    "image processing",
+    "reduce resolution",
+    "reduce size"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinyanfr/img-down.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yinyanfr/img-down/issues"
+  },
+  "homepage": "https://github.com/yinyanfr/img-down#readme",
+  "author": "Yan",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.4",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "args": "^5.0.3",
+    "sharp": "^0.32.1"
+  }
+}
