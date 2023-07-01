@@ -1,0 +1,1 @@
+export { compressImages } from './lib';
