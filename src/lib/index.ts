@@ -43,7 +43,7 @@ export async function compressImages(
         width:
           width ??
           (percentage && metadata.width
-            ? (metadata.width * percentage) / 100
+            ? Math.ceil(metadata.width * (percentage / 100))
             : 800),
         height,
       });
