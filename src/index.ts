@@ -1,1 +1,1 @@
-export { compressImages } from './lib';
+export { compressImages } from './core';

@@ -6,7 +6,7 @@
  */
 
 import args from 'args';
-import { compressImages } from '../lib';
+import { compressImages } from '../core';
 import ora from 'ora';
 
 args

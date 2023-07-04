@@ -1,6 +1,6 @@
 {
   "name": "image-down",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Yet another library / CLI tool to batch compress / downscale images.",
   "main": "dist/index.js",
   "bin": "dist/cli/index.js",

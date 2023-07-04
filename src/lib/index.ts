@@ -1,89 +1,38 @@
+import { access, mkdir } from 'node:fs/promises';
+import { parse } from 'node:path';
+
 /**
- * MIT License
- * Copyright (c) 2023 Yan
+ * Creates the output directory asynchronously if it does not already exist.
+ *
+ * @param {string} outputDir - The path of the output directory.
+ * @returns {Promise<void>} - A promise that resolves when the output directory is created.
  */
+export async function createOutputDir(outputDir: string) {
+  try {
+    await access(outputDir);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      await mkdir(outputDir, { recursive: true });
+    } else {
+      throw error;
+    }
+  }
+}
 
-import { readFile, writeFile } from 'node:fs/promises';
-import sharp, { type AvailableFormatInfo, type FormatEnum } from 'sharp';
-import { join, parse } from 'node:path';
-import { existsSync, mkdirSync } from 'node:fs';
-
-export async function compressImages(
-  filePaths: string[],
+/**
+ * Generates the output filename for a compressed image.
+ *
+ * @param {string} filePath - The file path to the original image.
+ * @param {Partial<ImageCompressingOptions>} [options={}] - Optional settings for the image compression.
+ * @returns {string} - The generated output filename for the compressed image.
+ */
+export function generateOutputFilename(
+  filePath: string,
   options: Partial<ImageCompressingOptions> = {},
 ) {
-  const {
-    percentage,
-    width,
-    height,
-    format,
-    outputDir,
-    outputFilenameSuffix,
-    returnBuffers,
-    onProgress,
-  } = options;
-  const fileBuffers: ImageCompressProgress[] = [];
-  const total = filePaths.length;
-  if (outputDir) {
-    if (!existsSync(outputDir)) {
-      mkdirSync(outputDir, { recursive: true });
-    }
-  }
-  for (let queueIndex = 0; queueIndex < total; queueIndex++) {
-    const filePath = filePaths[queueIndex];
-    const { name, ext } = parse(filePath);
-    const filename = `${name}${
-      outputFilenameSuffix?.length ? `-${outputFilenameSuffix}` : ''
-    }${format?.length ? `.${format}` : ext}`;
-    try {
-      const fileBuffer = await readFile(filePath);
-      const image = sharp(fileBuffer);
-      const metadata = await image.metadata();
-      let compressed = await image.resize({
-        width:
-          width ??
-          (percentage && metadata.width
-            ? Math.ceil(metadata.width * (percentage / 100))
-            : 800),
-        height,
-      });
-      if (format) {
-        compressed = compressed.toFormat(
-          format as keyof FormatEnum | AvailableFormatInfo,
-        );
-      }
-      const compressedBuffer = await compressed.toBuffer();
-      if (outputDir) {
-        const outputPath = join(outputDir, filename);
-        await writeFile(outputPath, compressedBuffer);
-      }
-      if (returnBuffers) {
-        fileBuffers.push({ filePath, fileBuffer: compressedBuffer });
-      }
-      onProgress?.({
-        filePath,
-        fileBuffer: compressedBuffer,
-        progress: {
-          queueIndex,
-          total,
-          filename,
-          status: 'success',
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      onProgress?.({
-        filePath,
-        progress: {
-          queueIndex,
-          total,
-          filename,
-          status: 'failed',
-        },
-      });
-    }
-  }
-  if (returnBuffers) {
-    return fileBuffers;
-  }
+  const { name, ext } = parse(filePath);
+  const { outputFilenameSuffix, format } = options;
+  return `${name}${
+    outputFilenameSuffix?.length ? `-${outputFilenameSuffix}` : ''
+  }${format?.length ? `.${format}` : ext}`;
 }
