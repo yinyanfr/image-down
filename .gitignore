@@ -131,3 +131,6 @@ dist
 
 # Trash OS
 .DS_Store
+
+# Misc
+tmp/

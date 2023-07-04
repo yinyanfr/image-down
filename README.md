@@ -16,7 +16,7 @@ npx image-down images/* --width 800 --output compressed
 ```typescript
 import { compressImages } from 'image-down';
 
-// Wildcards are not supported in library usages
+// For the wildcard example, please refer to the complete example below
 await compressImages(['./images/image1.jpg'], {
   width: 800,
   outputDir: 'compressed',
@@ -75,10 +75,10 @@ await compressImages(pathsArray, options);
 | progress            | Object | The progress object.           |
 | progress.queueIndex | number | File index.                    |
 | progress.total      | number | Queue length.                  |
-| progress.status     | string | "success" or "failed.          |
+| progress.status     | string | "success" or "failed".         |
 | progress.filename   | string | The name of the output file.   |
 
-### Completed Example
+### Complete Example
 
 ```typescript
 /**
@@ -101,3 +101,18 @@ await compressImages(filePaths, {
   },
 });
 ```
+
+### `compressImage`
+
+You can use `compressImage` if you only want to compress 1 image.
+
+```typescript
+import { compressImage } from 'image-down';
+
+const compressedBuffer = await compressImage('./image/image1.jpg', {
+  percentage: 50,
+  returnBuffers: true,
+});
+```
+
+Please note that `compressImage` returns directly the Buffer when `options.returnBuffers` is set to `true`.
